@@ -1,4 +1,4 @@
-package br.com.everdev.nameresolution.eurekaserver;
+package br.com.everdev.nameresolutioneurekaserver;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

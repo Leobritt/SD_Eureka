@@ -1,4 +1,4 @@
-package br.com.everdev.nameresolution.eurekaserver.controller;
+package br.com.everdev.nameresolutioneurekaserver.controller;
 
 import com.netflix.discovery.EurekaClient;
 import com.netflix.discovery.shared.Applications;
