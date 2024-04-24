@@ -1,4 +1,4 @@
-package br.com.everdev.nameresolution.perfil.controller;
+package br.com.everdev.nameresolutionperfil.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

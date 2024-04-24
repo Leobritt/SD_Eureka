@@ -6,12 +6,10 @@ server:
 spring:
   application:
     name: dns-server-app
-  
-dns:
-  server:
-    url: http://localhost:8761
-    
+  service-discovery-app: http://localhost:8761/eureka/apps
+
 eureka:
+  decoderName: JacksonJson
   client:
     healthcheck:
       enabled: true

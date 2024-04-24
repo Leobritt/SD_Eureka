@@ -40,7 +40,7 @@ public class ISPServerHealthCheckController {
     @GetMapping("/call-dns")
     public Mono<String> callDns() {
         return webClient.get()
-                .uri("/call-eureka")
+                .uri("/getRegisteredApplications")
                 .retrieve()
                 .bodyToMono(String.class)
                 .map(response -> "Response from DNS Server: " + response);

@@ -1,4 +1,4 @@
-package br.com.everdev.nameresolution.validacao.controller;
+package br.com.everdev.nameresolutionvalidacao.controller;
 
 import com.netflix.appinfo.InstanceInfo;
 import com.netflix.discovery.EurekaClient;

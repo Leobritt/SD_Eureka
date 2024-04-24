@@ -1,4 +1,4 @@
-package br.com.everdev.nameresolution.validacao;
+package br.com.everdev.nameresolutionvalidacao;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
