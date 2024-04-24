@@ -1,2 +1,2 @@
-/Users/everton/workspace/projects/howtocode_distributed_systems/name_resolution_dns/dns-server-app/src/main/java/br/com/everdev/nameresolution.dnsserver/DNSServerApplication.java
-/Users/everton/workspace/projects/howtocode_distributed_systems/name_resolution_dns/dns-server-app/src/main/java/br/com/everdev/nameresolution.dnsserver/controller/DNSServerHealthCheckController.java
+/home/leonardo/Documents/howtocode_distributed_systems/name_resolution_dns/dns-server-app/src/main/java/br/com/everdev/nameresolutiondnsserver/controller/DNSServerHealthCheckController.java
+/home/leonardo/Documents/howtocode_distributed_systems/name_resolution_dns/dns-server-app/src/main/java/br/com/everdev/nameresolutiondnsserver/DNSServerApplication.java

@@ -1,2 +1,2 @@
-br/com/everdev/nameresolution/dnsserver/DNSServerApplication.class
-br/com/everdev/nameresolution/dnsserver/controller/DNSServerHealthCheckController.class
+br/com/everdev/nameresolutiondnsserver/controller/DNSServerHealthCheckController.class
+br/com/everdev/nameresolutiondnsserver/DNSServerApplication.class

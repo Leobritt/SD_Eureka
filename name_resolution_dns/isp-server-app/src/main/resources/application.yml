@@ -9,7 +9,7 @@ spring:
 dns:
   server:
     url: http://localhost:8081
-    
+ 
 eureka:
   client:
     healthcheck:

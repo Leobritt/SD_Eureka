@@ -6,7 +6,11 @@ server:
 spring:
   application:
     name: dns-server-app
-
+  
+dns:
+  server:
+    url: http://localhost:8761
+    
 eureka:
   client:
     healthcheck:
