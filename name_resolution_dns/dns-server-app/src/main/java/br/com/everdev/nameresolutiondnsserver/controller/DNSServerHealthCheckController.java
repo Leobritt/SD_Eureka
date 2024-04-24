@@ -15,4 +15,5 @@ public class DNSServerHealthCheckController {
     public String healthy() {
         return "Sou o DNS Server e estou online: " + LocalDateTime.now();
     }
+    
 }

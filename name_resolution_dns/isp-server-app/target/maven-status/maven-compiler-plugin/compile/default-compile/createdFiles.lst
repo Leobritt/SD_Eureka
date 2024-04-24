@@ -1,2 +1,2 @@
-br/com/everdev/nameresolution/ispserver/ISPServerApplication.class
-br/com/everdev/nameresolution/ispserver/controller/ISPServerHealthCheckController.class
+br/com/everdev/nameresolutionispserver/controller/ISPServerHealthCheckController.class
+br/com/everdev/nameresolutionispserver/ISPServerApplication.class

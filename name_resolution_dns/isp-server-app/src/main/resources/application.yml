@@ -6,7 +6,10 @@ server:
 spring:
   application:
     name: isp-server-app
-
+dns:
+  server:
+    url: http://localhost:8081
+    
 eureka:
   client:
     healthcheck:

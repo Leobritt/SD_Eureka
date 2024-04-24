@@ -1,4 +1,4 @@
-package br.com.everdev.nameresolution.ispserver;
+package br.com.everdev.nameresolutionispserver;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
