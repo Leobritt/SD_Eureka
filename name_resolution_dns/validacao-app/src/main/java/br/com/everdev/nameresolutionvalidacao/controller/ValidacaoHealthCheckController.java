@@ -31,5 +31,6 @@ public class ValidacaoHealthCheckController {
     public String healthy() {
         return "Estpu vivo e bem! Sou a app "+appName+" - " + LocalDateTime.now();
     }
+    
 
 }
