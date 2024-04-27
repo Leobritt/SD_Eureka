@@ -25,7 +25,7 @@ public class PerfilHealthCheckController {
 
     public PerfilHealthCheckController() {
         // Inicialização e inserção de dados no HashMap no construtor da classe
-        dados.put("leo.pardo@gmail", "Aluno");
+        dados.put("leo.pardo@gmail.com", "Aluno");
         dados.put("everton@pro.ucsal.br", "Professor");
         dados.put("gustavocaste@gmail.com", "Funcionario");
 

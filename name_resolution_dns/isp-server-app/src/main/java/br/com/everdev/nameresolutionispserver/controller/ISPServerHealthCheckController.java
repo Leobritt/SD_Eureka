@@ -37,22 +37,29 @@ public class ISPServerHealthCheckController {
         return "Sou o ISP Server e estou online!" + LocalDateTime.now();
     }
 
-    @GetMapping("/call-dns")
-    public Mono<String> callDns() {
+    @PostMapping("/call-dns")
+    public Mono<String> callDns(@RequestBody String email) {
         return webClient.get()
                 .uri("/getRegisteredApplications")
                 .retrieve()
                 .bodyToMono(String.class)
-                .map(response -> "Response from DNS Server: " + response);
-    }
-
-    @GetMapping("/get-dns-ip")
-    public String getDnsIp() {
-        try {
-            InetAddress address = InetAddress.getByName("localhost");
-            return "IP address of DNS Server: " + address.getHostAddress();
-        } catch (UnknownHostException e) {
-            return "Error: " + e.getMessage();
-        }
-    }
-}
+                .flatMap(response -> {
+                    String response1 = "Response from DNS Server: " ;
+    
+                    return webClient.post()
+                            .uri("http://192.168.0.11:8182/validar-email")
+                            .bodyValue(email)
+                            .retrieve()
+                            .bodyToMono(String.class)
+                            .flatMap(response2 -> {
+                                String response3 = "Response from DNS Server: " + response2;
+    
+                                return webClient.post()
+                                        .uri("http://192.168.0.11:8181/perfil")
+                                        .bodyValue(email)
+                                        .retrieve()
+                                        .bodyToMono(String.class)
+                                        .map(response4 -> response1 + ", " + response3 + ", Response from DNS Server: " + response4);
+                            });
+                });
+            }}

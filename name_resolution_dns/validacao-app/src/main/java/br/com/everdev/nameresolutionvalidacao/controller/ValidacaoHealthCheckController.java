@@ -70,9 +70,9 @@ public class ValidacaoHealthCheckController {
     @PostMapping("/validar-email")
     public String validarEmail(@RequestBody String email) {
         if (emailsList.contains(email)) {
-            return "E-mail do usuário " + email + " existe na base de dados.";
+            return "E-mail do usuário " + email + " existe no base de dados.";
         } else {
-            return "E-mail do usuário " + email + " não foi encontrado na base de dados.";
+            return "E-mail do usuário " + email + " não foi encontrado no base de dados.";
         }
     }
 }
