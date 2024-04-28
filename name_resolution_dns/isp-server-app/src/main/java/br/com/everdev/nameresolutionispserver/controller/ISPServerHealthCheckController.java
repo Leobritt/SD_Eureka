@@ -37,29 +37,35 @@ public class ISPServerHealthCheckController {
         return "Sou o ISP Server e estou online!" + LocalDateTime.now();
     }
 
-    @PostMapping("/call-dns")
-    public Mono<String> callDns(@RequestBody String email) {
-        return webClient.get()
-                .uri("/getRegisteredApplications")
-                .retrieve()
-                .bodyToMono(String.class)
-                .flatMap(response -> {
-                    String response1 = "Response from DNS Server: " ;
+    @PostMapping("/validacao")
+public Mono<String> callDns(@RequestBody String email) {
+    // Utiliza o WebClient para enviar uma requisição GET para obter a lista de aplicativos registrados
+    return webClient.get()
+            .uri("/getRegisteredApplications")
+            .retrieve()
+            .bodyToMono(String.class)
+            .flatMap(response -> {
+                // Concatena uma resposta inicial indicando o retorno do servidor DNS
+                String response1 = "Response from DNS Server autentication: \n";
     
-                    return webClient.post()
-                            .uri("http://192.168.0.11:8182/validar-email")
-                            .bodyValue(email)
-                            .retrieve()
-                            .bodyToMono(String.class)
-                            .flatMap(response2 -> {
-                                String response3 = "Response from DNS Server: " + response2;
+                // Após receber a resposta, envia duas requisições POST para diferentes endpoints
+                return webClient.post()
+                        .uri("http://192.168.0.11:8182/validar-email")
+                        .bodyValue(email)
+                        .retrieve()
+                        .bodyToMono(String.class)
+                        .flatMap(response2 -> {
+                            // Concatena a resposta da segunda requisição ao servidor DNS
+                            String response3 =  response2;
     
-                                return webClient.post()
-                                        .uri("http://192.168.0.11:8181/perfil")
-                                        .bodyValue(email)
-                                        .retrieve()
-                                        .bodyToMono(String.class)
-                                        .map(response4 -> response1 + ", " + response3 + ", Response from DNS Server: " + response4);
-                            });
-                });
-            }}
+                            // Envia uma terceira requisição POST para outro endpoint
+                            return webClient.post()
+                                    .uri("http://192.168.0.11:8181/perfil")
+                                    .bodyValue(email)
+                                    .retrieve()
+                                    .bodyToMono(String.class)
+                                    // Retorna uma Mono com a resposta combinada de todas as requisições
+                                    .map(response4 -> response1 +  response3 + "\nPerfil do email solicitado:\n  " + response4);
+                        });
+            });
+}}
