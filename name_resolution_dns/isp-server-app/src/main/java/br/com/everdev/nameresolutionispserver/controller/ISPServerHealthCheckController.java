@@ -1,5 +1,7 @@
 package br.com.everdev.nameresolutionispserver.controller;
 
+import br.com.everdev.nameresolutionispserver.util.Constants;
+import com.netflix.discovery.shared.Application;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -7,9 +9,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 import jakarta.annotation.PostConstruct;
 import reactor.core.publisher.Mono;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 public class ISPServerHealthCheckController {
@@ -70,11 +71,32 @@ public class ISPServerHealthCheckController {
     }
 
     @PostMapping("/validate")
-    public Mono<String> call(@RequestBody String email) {
-        return webClient.get()
-                .uri("/getRegisteredApplications")
+    public Mono<String> validate(@RequestBody ISPEmailDTO dto) {
+        if (dto.email().equals(null) || dto.email().equals("")) throw new IllegalArgumentException("");
+
+        var applications = getRegisteredApplications().block();
+        String validateEmailUrl = null;
+
+        for(var application : applications) {
+            if (application.getName().equals(Constants.AppName.validacaoApp)) {
+                validateEmailUrl = application.getInstances().stream().findFirst().get().getHomePageUrl();
+            }
+        }
+
+        return webClient.post()
+                .uri(validateEmailUrl + Constants.EndpointRequests.validateEmailEndpoint)
+                .bodyValue(dto.email())
                 .retrieve()
                 .bodyToMono(String.class);
+
+    }
+
+    public Mono<List<Application>> getRegisteredApplications() {
+        return webClient.get()
+                .uri(Constants.EndpointRequests.registeredApplicationsEndpoint)
+                .retrieve()
+                .bodyToFlux(Application.class)
+                .collectList();
     }
 
     @PostMapping("/validate-email")

@@ -2,8 +2,17 @@ package br.com.everdev.nameresolutionperfil.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.net.MalformedURLException;
@@ -20,36 +29,51 @@ public class PerfilHealthCheckController {
     public String healthy() {
         return "Estpu vivo e bem! Sou a app " + appName + " - " + LocalDateTime.now();
     }
-// Declaração do HashMap e inicialização
-    private Map<String, String> dados = new HashMap<>(); 
 
-// Construtor da classe, onde são inseridos dados no HashMap
-public PerfilHealthCheckController() {
-    dados.put("leo.pardo@gmail.com", "Aluno");
-    dados.put("everton@pro.ucsal.br", "Professor");
-    dados.put("gustavocaste@gmail.com", "Funcionario");
-}
+    private Map<String, String> dados = new HashMap<>();
 
-// Método para obter todos os dados do perfil
-@GetMapping("/dados")
-public Map<String, String> getDados() {
-    return dados;
-}
-
-// Método para obter o perfil com base no e-mail fornecido
-@PostMapping("/perfil")
-public ResponseEntity<String> getPerfil(@RequestBody String email) {
-
-// Obtém o perfil associado ao e-mail do HashMap
-    String perfil = dados.get(email);
-    if (perfil != null) {
-
-// Se o perfil existe, retorna uma resposta OK com o perfil correspondente ao e-mail
-        return ResponseEntity.ok("E-mail: " + email + ", Perfil: " + perfil);
-    } else {
-
-// Se o perfil não existe, retorna uma resposta OK indicando que o usuário não tem perfil
-        return ResponseEntity.ok("Usuário não tem perfil");
+    public PerfilHealthCheckController() {
+        dados.put("leo.pardo@gmail.com", "Aluno");
+        dados.put("everton@pro.ucsal.br", "Professor");
+        dados.put("gustavocaste@gmail.com", "Funcionario");
     }
-}
+
+    @GetMapping("/profile-data")
+    public ResponseEntity<byte[]> getProfileData() {
+        try {
+            Path filePath = Paths.get("../perfil-app/src/main/java/br/com/everdev/nameresolutionperfil/files/profile-data.txt");
+            File file = filePath.toFile();
+
+            Path directoryPath = filePath.getParent();
+            if (!Files.exists(directoryPath)) {
+                Files.createDirectories(directoryPath);
+            }
+
+            FileWriter writer = new FileWriter(file);
+            for (Map.Entry<String, String> entry : dados.entrySet()) {
+                writer.write(entry.getKey() + ": " + entry.getValue() + "\n");
+            }
+            writer.close();
+
+            byte[] fileContent = Files.readAllBytes(file.toPath());
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=profile-data.txt");
+
+            return new ResponseEntity<>(fileContent, headers, HttpStatus.OK);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/perfil")
+    public ResponseEntity<String> getPerfil(@RequestBody String email) {
+        String perfil = dados.get(email);
+        if (perfil != null) {
+            return ResponseEntity.ok("E-mail: " + email + ", Perfil: " + perfil);
+        } else {
+            return ResponseEntity.ok("Usuário não tem perfil");
+        }
+    }
 }

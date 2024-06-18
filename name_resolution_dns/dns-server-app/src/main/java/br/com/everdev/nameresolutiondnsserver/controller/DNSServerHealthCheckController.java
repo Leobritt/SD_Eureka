@@ -30,16 +30,9 @@ public class DNSServerHealthCheckController {
     }
 
     @GetMapping("/getRegisteredApplications")
-    public List<String> getRegisteredApplications() {
-        List<String> homePageUrls= new ArrayList<>();
+    public List<Application> getRegisteredApplications() {
         Applications app = eurekaClient.getApplications();
-        var applications = app.getRegisteredApplications();
-
-        for(var application : applications){
-            homePageUrls.add(application.getInstances().get(0).getHomePageUrl());
-        }
-
-        return homePageUrls;
+        return app.getRegisteredApplications();
     }
 
 }
