@@ -14,6 +14,11 @@
         <option value="$PROJECT_DIR$/message_communication_rmi_eureka/rmi-server/pom.xml" />
         <option value="$PROJECT_DIR$/message_communication_rmi_eureka/rmi-client-b/pom.xml" />
         <option value="$PROJECT_DIR$/message_communication_rmi_eureka/rmi-client-a/pom.xml" />
+        <option value="$PROJECT_DIR$/name_resolution_dns/dns-server-app/pom.xml" />
+        <option value="$PROJECT_DIR$/name_resolution_dns/eureka-server-app/pom.xml" />
+        <option value="$PROJECT_DIR$/name_resolution_dns/isp-server-app/pom.xml" />
+        <option value="$PROJECT_DIR$/name_resolution_dns/perfil-app/pom.xml" />
+        <option value="$PROJECT_DIR$/name_resolution_dns/validacao-app/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">
@@ -21,7 +26,6 @@
         <option value="$PROJECT_DIR$/message_communication_websocket_eureka/websocket-client-b/websocket-client-b/pom.xml" />
       </set>
     </option>
-    <option name="workspaceImportForciblyTurnedOn" value="true" />
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_21" default="true" project-jdk-name="openjdk-21" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />

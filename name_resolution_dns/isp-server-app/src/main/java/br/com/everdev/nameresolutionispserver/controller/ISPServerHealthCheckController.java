@@ -38,34 +38,51 @@ public class ISPServerHealthCheckController {
     }
 
     @PostMapping("/validacao")
-public Mono<String> callDns(@RequestBody String email) {
-    // Utiliza o WebClient para enviar uma requisição GET para obter a lista de aplicativos registrados
-    return webClient.get()
-            .uri("/getRegisteredApplications")
-            .retrieve()
-            .bodyToMono(String.class)
-            .flatMap(response -> {
-                // Concatena uma resposta inicial indicando o retorno do servidor DNS
-                String response1 = "Response from DNS Server autentication: \n";
-    
-                // Após receber a resposta, envia duas requisições POST para diferentes endpoints
-                return webClient.post()
-                        .uri("http://192.168.0.11:8182/validar-email")
-                        .bodyValue(email)
-                        .retrieve()
-                        .bodyToMono(String.class)
-                        .flatMap(response2 -> {
-                            // Concatena a resposta da segunda requisição ao servidor DNS
-                            String response3 =  response2;
-    
-                            // Envia uma terceira requisição POST para outro endpoint
-                            return webClient.post()
-                                    .uri("http://192.168.0.11:8181/perfil")
-                                    .bodyValue(email)
-                                    .retrieve()
-                                    .bodyToMono(String.class)
-                                    // Retorna uma Mono com a resposta combinada de todas as requisições
-                                    .map(response4 -> response1 +  response3 + "\nPerfil do email solicitado:\n  " + response4);
-                        });
-            });
-}}
+    public Mono<String> callDns(@RequestBody String email) {
+        return webClient.get()
+                .uri("/getRegisteredApplications")
+                .retrieve()
+                .bodyToMono(String.class)
+                .doOnNext(response -> System.out.println("Response from getRegisteredApplications: " + response))
+                .flatMap(response -> {
+                    String response1 = "Response from DNS Server autentication: \n";
+
+                    return webClient.post()
+                            .uri("http://192.168.0.11:8182/validar-email")
+                            .bodyValue(email)
+                            .retrieve()
+                            .bodyToMono(String.class)
+                            .doOnNext(response2 -> System.out.println("Response from validar-email: " + response2))
+                            .flatMap(response2 -> {
+                                String response3 = response2;
+
+                                return webClient.post()
+                                        .uri("http://192.168.0.11:8181/perfil")
+                                        .bodyValue(email)
+                                        .retrieve()
+                                        .bodyToMono(String.class)
+                                        .doOnNext(response4 -> System.out.println("Response from perfil: " + response4))
+                                        .map(response4 -> response1 + response3 + "\nPerfil do email solicitado:\n  " + response4);
+                            });
+                })
+                .doOnError(error -> System.err.println("Error occurred: " + error.getMessage()))
+                .onErrorResume(error -> Mono.just("Error occurred during the process: " + error.getMessage()));
+    }
+
+    @PostMapping("/validate")
+    public Mono<String> call(@RequestBody String email) {
+        return webClient.get()
+                .uri("/getRegisteredApplications")
+                .retrieve()
+                .bodyToMono(String.class);
+    }
+
+    @PostMapping("/validate-email")
+    public Mono<String> callEmail(@RequestBody String email) {
+        return webClient.post()
+                .uri("http://192.168.1.18:8182/validar-email")
+                .bodyValue(email)
+                .retrieve()
+                .bodyToMono(String.class);
+    }
+}

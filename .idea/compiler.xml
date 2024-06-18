@@ -2,6 +2,7 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
       <profile name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
@@ -10,11 +11,16 @@
         <module name="websocket-client-a" />
         <module name="websocket-server" />
         <module name="websocket-client-b" />
+        <module name="isp-server-app" />
         <module name="demo-eureka-client-b" />
-        <module name="rmi-client-b" />
-        <module name="rmi-client-a" />
         <module name="demo-eureka-app" />
         <module name="rmi-server" />
+        <module name="eureka-server-app" />
+        <module name="dns-server-app" />
+        <module name="perfil-app" />
+        <module name="rmi-client-b" />
+        <module name="rmi-client-a" />
+        <module name="validacao-app" />
       </profile>
     </annotationProcessing>
   </component>
@@ -23,9 +29,14 @@
       <module name="demo-eureka-app" options="-parameters" />
       <module name="demo-eureka-client-a" options="-parameters" />
       <module name="demo-eureka-client-b" options="-parameters" />
+      <module name="dns-server-app" options="-parameters" />
+      <module name="eureka-server-app" options="-parameters" />
+      <module name="isp-server-app" options="-parameters" />
+      <module name="perfil-app" options="-parameters" />
       <module name="rmi-client-a" options="-parameters" />
       <module name="rmi-client-b" options="-parameters" />
       <module name="rmi-server" options="-parameters" />
+      <module name="validacao-app" options="-parameters" />
       <module name="websocket-client-a" options="-parameters" />
       <module name="websocket-client-b" options="-parameters" />
       <module name="websocket-server" options="-parameters" />
