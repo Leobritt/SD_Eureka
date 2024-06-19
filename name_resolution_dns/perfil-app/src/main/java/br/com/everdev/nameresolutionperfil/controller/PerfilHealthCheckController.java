@@ -6,10 +6,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -41,7 +43,8 @@ public class PerfilHealthCheckController {
     @GetMapping("/profile-data")
     public ResponseEntity<byte[]> getProfileData() {
         try {
-            Path filePath = Paths.get("../perfil-app/src/main/java/br/com/everdev/nameresolutionperfil/files/profile-data.txt");
+            Path filePath = Paths
+                    .get("../perfil-app/src/main/java/br/com/everdev/nameresolutionperfil/files/profile-data.txt");
             File file = filePath.toFile();
 
             Path directoryPath = filePath.getParent();
@@ -61,6 +64,23 @@ public class PerfilHealthCheckController {
             headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=profile-data.txt");
 
             return new ResponseEntity<>(fileContent, headers, HttpStatus.OK);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/uploadTexto")
+    public ResponseEntity<String> uploadTexto(@RequestParam("arquivo") MultipartFile arquivo) {
+        if (arquivo.isEmpty()) {
+            System.out.println("olaaaaaa");
+            return new ResponseEntity<>("O arquivo está vazio", HttpStatus.BAD_REQUEST);
+        }
+
+        try {
+            String conteudo = new String(arquivo.getBytes(), StandardCharsets.UTF_8);
+            // Aqui você pode processar o conteúdo do arquivo de texto como necessário
+            return new ResponseEntity<>("Arquivo recebido com sucesso!", HttpStatus.OK);
         } catch (IOException e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
