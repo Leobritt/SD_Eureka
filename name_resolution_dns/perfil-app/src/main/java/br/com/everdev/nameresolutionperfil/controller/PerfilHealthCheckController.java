@@ -71,15 +71,13 @@ public class PerfilHealthCheckController {
     }
 
     @PostMapping("/uploadTexto")
-    public ResponseEntity<String> uploadTexto(@RequestParam("arquivo") MultipartFile arquivo) {
+    public ResponseEntity<String> uploadTexto(@RequestPart() MultipartFile arquivo) {
         if (arquivo.isEmpty()) {
-            System.out.println("olaaaaaa");
             return new ResponseEntity<>("O arquivo está vazio", HttpStatus.BAD_REQUEST);
         }
 
         try {
             String conteudo = new String(arquivo.getBytes(), StandardCharsets.UTF_8);
-            // Aqui você pode processar o conteúdo do arquivo de texto como necessário
             return new ResponseEntity<>("Arquivo recebido com sucesso!", HttpStatus.OK);
         } catch (IOException e) {
             e.printStackTrace();
