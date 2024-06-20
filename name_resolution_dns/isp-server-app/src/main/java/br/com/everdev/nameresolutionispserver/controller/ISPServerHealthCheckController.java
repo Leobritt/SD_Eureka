@@ -41,7 +41,7 @@ public class ISPServerHealthCheckController {
     @PostMapping("/validacao")
     public Mono<String> callDns(@RequestBody String email) {
         return webClient.get()
-                .uri("/getRegisteredApplications")
+                .uri("http://localhost:8081/getRegisteredApplications")
                 .retrieve()
                 .bodyToMono(String.class)
                 .doOnNext(response -> System.out.println("Response from getRegisteredApplications: " + response))
@@ -49,7 +49,7 @@ public class ISPServerHealthCheckController {
                     String response1 = "Response from DNS Server autentication: \n";
 
                     return webClient.post()
-                            .uri("http://192.168.0.11:8182/validar-email")
+                            .uri("http://localhost:8182/validar-email")
                             .bodyValue(email)
                             .retrieve()
                             .bodyToMono(String.class)
@@ -58,7 +58,7 @@ public class ISPServerHealthCheckController {
                                 String response3 = response2;
 
                                 return webClient.post()
-                                        .uri("http://192.168.0.11:8181/perfil")
+                                        .uri("http://localhost:8191/perfil")
                                         .bodyValue(email)
                                         .retrieve()
                                         .bodyToMono(String.class)
@@ -102,7 +102,7 @@ public class ISPServerHealthCheckController {
     @PostMapping("/validate-email")
     public Mono<String> callEmail(@RequestBody String email) {
         return webClient.post()
-                .uri("http://192.168.1.18:8182/validar-email")
+                .uri("http://localhost:8182/validar-email")
                 .bodyValue(email)
                 .retrieve()
                 .bodyToMono(String.class);
