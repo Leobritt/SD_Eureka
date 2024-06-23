@@ -1,2 +1,2 @@
-br/com/everdev/nameresolution/perfil/PerfilApplication.class
-br/com/everdev/nameresolution/perfil/controller/PerfilHealthCheckController.class
+br/com/everdev/nameresolutionperfil/controller/PerfilHealthCheckController.class
+br/com/everdev/nameresolutionperfil/PerfilApplication.class

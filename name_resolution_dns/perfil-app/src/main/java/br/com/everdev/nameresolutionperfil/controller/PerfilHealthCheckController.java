@@ -7,6 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.reactive.function.client.WebClient;
+
+import reactor.core.publisher.Mono;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -26,6 +29,13 @@ import java.time.LocalDateTime;
 public class PerfilHealthCheckController {
     @Value("${spring.application.name}")
     private String appName;
+
+    private WebClient webClient;
+
+    @Autowired
+    public PerfilHealthCheckController(WebClient webClient) {
+        this.webClient = webClient;
+    }
 
     @GetMapping("/health")
     public String healthy() {
@@ -93,5 +103,17 @@ public class PerfilHealthCheckController {
         } else {
             return ResponseEntity.ok("Usuário não tem perfil");
         }
+    }
+
+    @GetMapping("/chamada-dfs-a")
+    public Mono<ResponseEntity<String>> callDfsA() {
+        return webClient.get()
+                .uri("http://localhost:8050/dfs-a-endpoint") // TODO: change the url when create the route
+                .retrieve()
+                .bodyToMono(String.class)
+                .map(response -> ResponseEntity.ok("Persisted successfully: " + response))
+                .defaultIfEmpty(ResponseEntity.badRequest().body("Not found at dfs-a endpoint"))
+                .doOnNext(response -> System.out.println("Response from dfs-a: " + response.getBody()))
+                .doOnError(error -> System.err.println("Error occurred: " + error.getMessage()));
     }
 }
