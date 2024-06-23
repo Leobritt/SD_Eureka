@@ -9,6 +9,9 @@
     <file url="file://$PROJECT_DIR$/message_communication_websocket_eureka/websocket-client-b/websocket-client-b/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/message_communication_websocket_eureka/websocket-client-b/websocket-client-b/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/message_communication_websocket_eureka/websocket-server/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/name_resolution_dns/dfs-a/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/name_resolution_dns/dfs-b/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/name_resolution_dns/dfs-c/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/name_resolution_dns/dns-server-app/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/name_resolution_dns/eureka-server-app/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/name_resolution_dns/isp-server-app/src/main/java" charset="UTF-8" />

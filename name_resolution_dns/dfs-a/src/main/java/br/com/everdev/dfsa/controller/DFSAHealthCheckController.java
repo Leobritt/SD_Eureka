@@ -24,7 +24,6 @@ public class DFSAHealthCheckController {
 
     private WebClient webClient;
 
-    @Autowired
     public DFSAHealthCheckController(WebClient webClient) {
         this.webClient = webClient;
     }

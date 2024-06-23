@@ -32,7 +32,6 @@ public class PerfilHealthCheckController {
 
     private WebClient webClient;
 
-    @Autowired
     public PerfilHealthCheckController(WebClient webClient) {
         this.webClient = webClient;
     }
