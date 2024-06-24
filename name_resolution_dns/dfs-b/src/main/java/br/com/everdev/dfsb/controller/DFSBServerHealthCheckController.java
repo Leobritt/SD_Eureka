@@ -30,9 +30,7 @@ public class DFSBServerHealthCheckController {
     List<String> mockFilePaths = Arrays.asList(
             "mock_data/file1.txt",
             "mock_data/file2.txt",
-            "mock_data/file3.txt",
-            "mock_data/file4.txt",
-            "mock_data/file5.txt");
+            "mock_data/file3.txt");
 
     @GetMapping("/health")
     public String healthy() {
@@ -50,14 +48,15 @@ public class DFSBServerHealthCheckController {
         return "Arquivo encontrado no DFSB.";
     }
 
-    @GetMapping("/verificarArquivoMockado/{nomeArquivo}")
+    @GetMapping("/verificar/{nomeArquivo}")
     public ResponseEntity<String> verificarArquivoMockado(@PathVariable String nomeArquivo) {
-        boolean arquivoExiste = mockFilePaths.stream().anyMatch(caminho -> caminho.equals(nomeArquivo));
+        boolean arquivoExiste = mockFilePaths.stream()
+                .anyMatch(filePath -> filePath.endsWith(nomeArquivo));
         if (arquivoExiste) {
-            return ResponseEntity.ok("Arquivo " + nomeArquivo + " encontrado no sistema de arquivos mockado.");
+            return ResponseEntity.ok("Presente");
         } else {
             return ResponseEntity.status(HttpStatus.SC_NOT_FOUND)
-                    .body("Arquivo " + nomeArquivo + " não encontrado no sistema de arquivos mockado.");
+                    .body("Ausente");
         }
     }
 }

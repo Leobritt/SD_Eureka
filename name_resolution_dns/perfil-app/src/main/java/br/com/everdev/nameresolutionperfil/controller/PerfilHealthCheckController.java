@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 
 import java.io.File;
@@ -30,15 +31,12 @@ public class PerfilHealthCheckController {
     @Value("${spring.application.name}")
     private String appName;
 
+    @Autowired
     private WebClient webClient;
-
-    public PerfilHealthCheckController(WebClient webClient) {
-        this.webClient = webClient;
-    }
 
     @GetMapping("/health")
     public String healthy() {
-        return "Estpu vivo e bem! Sou a app " + appName + " - " + LocalDateTime.now();
+        return "Estou vivo e bem! Sou a app " + appName + " - " + LocalDateTime.now();
     }
 
     private Map<String, String> dados = new HashMap<>();
@@ -104,14 +102,16 @@ public class PerfilHealthCheckController {
         }
     }
 
-    @GetMapping("/chamada-dfs-a")
-    public Mono<ResponseEntity<String>> callDfsA() {
+    @GetMapping("/chamada-dfs-a/{nomeArquivo}")
+    public Mono<ResponseEntity<String>> callDfsA(@PathVariable String nomeArquivo) {
         return webClient.get()
-                .uri("http://localhost:8050/dfs-a-endpoint") // TODO: change the url when create the route
+                .uri("http://localhost:8050/verificarArquivo/{nomeArquivo}", nomeArquivo)
                 .retrieve()
                 .bodyToMono(String.class)
                 .map(response -> ResponseEntity.ok("Persisted successfully: " + response))
-                .defaultIfEmpty(ResponseEntity.badRequest().body("Not found at dfs-a endpoint"))
+                .onErrorResume(WebClientResponseException.NotFound.class, ex ->
+                        Mono.just(ResponseEntity.status(HttpStatus.NOT_FOUND)
+                                .body("Arquivo não encontrado no DFS-A: " + nomeArquivo)))
                 .doOnNext(response -> System.out.println("Response from dfs-a: " + response.getBody()))
                 .doOnError(error -> System.err.println("Error occurred: " + error.getMessage()));
     }

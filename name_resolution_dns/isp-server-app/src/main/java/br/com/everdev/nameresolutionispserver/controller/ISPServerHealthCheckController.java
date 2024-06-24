@@ -3,10 +3,13 @@ package br.com.everdev.nameresolutionispserver.controller;
 import br.com.everdev.nameresolutionispserver.util.Constants;
 import com.netflix.discovery.shared.Application;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import jakarta.annotation.PostConstruct;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
@@ -107,4 +110,20 @@ public class ISPServerHealthCheckController {
                 .retrieve()
                 .bodyToMono(String.class);
     }
+
+    @GetMapping("/verify/{nomeArquivo}")
+    public Mono<ResponseEntity<String>> verifyArchive(@PathVariable String nomeArquivo) {
+        return webClient.get()
+                .uri("http://localhost:8191/chamada-dfs-a/{nomeArquivo}", nomeArquivo)
+                .retrieve()
+                .bodyToMono(String.class)
+                .map(response -> ResponseEntity.ok("Persisted successfully: " + response))
+                .defaultIfEmpty(ResponseEntity.badRequest().body("Not found at dfs-a endpoint"))
+                .onErrorResume(WebClientResponseException.NotFound.class, ex ->
+                        Mono.just(ResponseEntity.status(HttpStatus.NOT_FOUND)
+                                .body("Arquivo não encontrado: " + nomeArquivo)))
+                .doOnNext(response -> System.out.println("Response from dfs-a: " + response.getBody()))
+                .doOnError(error -> System.err.println("Error occurred: " + error.getMessage()));
+    }
+
 }

@@ -4,6 +4,8 @@ import com.netflix.discovery.EurekaClient;
 import com.netflix.discovery.shared.Application;
 import com.netflix.discovery.shared.Applications;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,23 +54,30 @@ public class DFSAHealthCheckController {
 
         return webClient.get()
                 .uri(urlDFSB)
-                .retrieve()
-                .bodyToMono(String.class)
-                .flatMap(response -> {
-                    if ("Presente".equals(response)) {
-                        return Mono.just(ResponseEntity.ok("Arquivo encontrado no DFSB."));
-                    } else {
-                        // Se não encontrado no DFSB, tenta no DFSC
+                .exchangeToMono(response -> {
+                    if (response.statusCode().is2xxSuccessful()) {
+                        return response.bodyToMono(String.class)
+                                .map(body -> ResponseEntity.ok("Arquivo encontrado no DFSB."));
+                    } else if (response.statusCode().is4xxClientError()) {
                         return webClient.get()
                                 .uri(urlDFSC)
                                 .retrieve()
                                 .bodyToMono(String.class)
                                 .map(respDFSC -> "Presente".equals(respDFSC)
                                         ? ResponseEntity.ok("Arquivo encontrado no DFSC.")
-                                        : ResponseEntity.ok("Arquivo não encontrado em nenhum DFS."));
+                                        : ResponseEntity.status(HttpStatus.NOT_FOUND).body("Arquivo não encontrado em nenhum DFS."));
+                    } else {
+                        return Mono.just(ResponseEntity.status(response.statusCode())
+                                .body("Erro ao verificar o arquivo."));
                     }
                 })
-                .defaultIfEmpty(ResponseEntity.badRequest().body("Erro ao verificar o arquivo."));
+                .onErrorResume(WebClientResponseException.class, ex -> {
+                    if (ex.getStatusCode() == HttpStatus.NOT_FOUND) {
+                        return Mono.just(ResponseEntity.status(HttpStatus.NOT_FOUND)
+                                .body("Arquivo não encontrado em nenhum DFS."));
+                    }
+                    return Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                            .body("Erro ao verificar o arquivo: " + ex.getMessage()));
+                });
     }
-
 }
