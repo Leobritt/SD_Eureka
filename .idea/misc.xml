@@ -19,6 +19,9 @@
         <option value="$PROJECT_DIR$/name_resolution_dns/isp-server-app/pom.xml" />
         <option value="$PROJECT_DIR$/name_resolution_dns/perfil-app/pom.xml" />
         <option value="$PROJECT_DIR$/name_resolution_dns/validacao-app/pom.xml" />
+        <option value="$PROJECT_DIR$/name_resolution_dns/dfs-a/pom.xml" />
+        <option value="$PROJECT_DIR$/name_resolution_dns/dfs-b/pom.xml" />
+        <option value="$PROJECT_DIR$/name_resolution_dns/dfs-c/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">

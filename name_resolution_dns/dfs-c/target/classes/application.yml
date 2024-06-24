@@ -1,0 +1,16 @@
+# application.yml
+
+server:
+  port: 8053 # or your preferred port
+
+spring:
+  application:
+    name: dfs-c
+  service-discovery-app: http://localhost:8761/eureka/apps
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    preferIpAddress: true # Optiona

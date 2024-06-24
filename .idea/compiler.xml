@@ -17,7 +17,10 @@
         <module name="rmi-server" />
         <module name="eureka-server-app" />
         <module name="dns-server-app" />
+        <module name="dfs-a" />
+        <module name="dfs-c" />
         <module name="perfil-app" />
+        <module name="dfs-b" />
         <module name="rmi-client-b" />
         <module name="rmi-client-a" />
         <module name="validacao-app" />
@@ -29,6 +32,9 @@
       <module name="demo-eureka-app" options="-parameters" />
       <module name="demo-eureka-client-a" options="-parameters" />
       <module name="demo-eureka-client-b" options="-parameters" />
+      <module name="dfs-a" options="-parameters" />
+      <module name="dfs-b" options="-parameters" />
+      <module name="dfs-c" options="-parameters" />
       <module name="dns-server-app" options="-parameters" />
       <module name="eureka-server-app" options="-parameters" />
       <module name="isp-server-app" options="-parameters" />

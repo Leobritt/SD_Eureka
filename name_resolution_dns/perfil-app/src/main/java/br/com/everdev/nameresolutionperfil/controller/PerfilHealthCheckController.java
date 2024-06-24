@@ -6,10 +6,16 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.reactive.function.client.WebClient;
+
+import org.springframework.web.reactive.function.client.WebClientResponseException;
+import reactor.core.publisher.Mono;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -25,9 +31,12 @@ public class PerfilHealthCheckController {
     @Value("${spring.application.name}")
     private String appName;
 
+    @Autowired
+    private WebClient webClient;
+
     @GetMapping("/health")
     public String healthy() {
-        return "Estpu vivo e bem! Sou a app " + appName + " - " + LocalDateTime.now();
+        return "Estou vivo e bem! Sou a app " + appName + " - " + LocalDateTime.now();
     }
 
     private Map<String, String> dados = new HashMap<>();
@@ -41,7 +50,8 @@ public class PerfilHealthCheckController {
     @GetMapping("/profile-data")
     public ResponseEntity<byte[]> getProfileData() {
         try {
-            Path filePath = Paths.get("../perfil-app/src/main/java/br/com/everdev/nameresolutionperfil/files/profile-data.txt");
+            Path filePath = Paths
+                    .get("../perfil-app/src/main/java/br/com/everdev/nameresolutionperfil/files/profile-data.txt");
             File file = filePath.toFile();
 
             Path directoryPath = filePath.getParent();
@@ -67,6 +77,21 @@ public class PerfilHealthCheckController {
         }
     }
 
+    @PostMapping("/uploadTexto")
+    public ResponseEntity<String> uploadTexto(@RequestPart() MultipartFile arquivo) {
+        if (arquivo.isEmpty()) {
+            return new ResponseEntity<>("O arquivo está vazio", HttpStatus.BAD_REQUEST);
+        }
+
+        try {
+            String conteudo = new String(arquivo.getBytes(), StandardCharsets.UTF_8);
+            return new ResponseEntity<>("Arquivo recebido com sucesso!", HttpStatus.OK);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @PostMapping("/perfil")
     public ResponseEntity<String> getPerfil(@RequestBody String email) {
         String perfil = dados.get(email);
@@ -75,5 +100,19 @@ public class PerfilHealthCheckController {
         } else {
             return ResponseEntity.ok("Usuário não tem perfil");
         }
+    }
+
+    @GetMapping("/chamada-dfs-a/{nomeArquivo}")
+    public Mono<ResponseEntity<String>> callDfsA(@PathVariable String nomeArquivo) {
+        return webClient.get()
+                .uri("http://localhost:8050/verificarArquivo/{nomeArquivo}", nomeArquivo)
+                .retrieve()
+                .bodyToMono(String.class)
+                .map(response -> ResponseEntity.ok("Persisted successfully: " + response))
+                .onErrorResume(WebClientResponseException.NotFound.class, ex ->
+                        Mono.just(ResponseEntity.status(HttpStatus.NOT_FOUND)
+                                .body("Arquivo não encontrado no DFS-A: " + nomeArquivo)))
+                .doOnNext(response -> System.out.println("Response from dfs-a: " + response.getBody()))
+                .doOnError(error -> System.err.println("Error occurred: " + error.getMessage()));
     }
 }

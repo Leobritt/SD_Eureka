@@ -1,11 +1,13 @@
-
 server:
-  port: 8181
-
+  port: 8191
 
 spring:
   application:
     name: perfil-app
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
 
 eureka:
   client:
